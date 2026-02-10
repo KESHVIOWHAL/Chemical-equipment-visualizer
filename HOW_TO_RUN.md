@@ -12,7 +12,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-✅ Backend runs on http://127.0.0.1:8000
+ Backend runs on http://127.0.0.1:8000
 
 ## Step 2: Web App (3 minutes)
 
@@ -24,7 +24,7 @@ npm install
 npm start
 ```
 
-✅ Opens at http://localhost:3000
+ Opens at http://localhost:3000
 
 ## Step 3: Desktop App (2 minutes)
 
@@ -36,7 +36,7 @@ cd desktop
 python main.py
 ```
 
-✅ Desktop window opens
+ Desktop window opens
 
 ## Test It!
 
