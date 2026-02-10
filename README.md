@@ -54,7 +54,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-✅ Backend runs on http://127.0.0.1:8000
+Backend runs on http://127.0.0.1:8000
 
 ### 2. Web Application Setup (3 minutes)
 
@@ -66,7 +66,7 @@ npm install
 npm start
 ```
 
-✅ Web app opens at http://localhost:3000
+ Web app opens at http://localhost:3000
 
 ### 3. Desktop Application Setup (2 minutes)
 
@@ -78,7 +78,7 @@ cd desktop
 python main.py
 ```
 
-✅ Desktop application window opens
+ Desktop application window opens
 
 ## 📊 Usage
 
@@ -193,5 +193,3 @@ If you encounter any issues or have questions:
 3. Create a new issue with detailed information about your problem
 
 ---
-
-**Happy analyzing!** 🧪📈
