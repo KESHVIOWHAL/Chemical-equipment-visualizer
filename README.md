@@ -2,7 +2,7 @@
 
 A hybrid web and desktop application for visualizing and analyzing chemical equipment data.
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Backend Setup
 ```bash
@@ -31,13 +31,13 @@ python main.py
 
 ## 📊 Features
 
-- ✅ CSV file upload (Web & Desktop)
-- ✅ Data analysis with Pandas
-- ✅ Interactive charts (Chart.js & Matplotlib)
-- ✅ Dataset history (last 5 uploads)
-- ✅ PDF report generation
-- ✅ RESTful API backend
-- ✅ SQLite database
+-  CSV file upload (Web & Desktop)
+- Data analysis with Pandas
+- Interactive charts (Chart.js & Matplotlib)
+-  Dataset history (last 5 uploads)
+-  PDF report generation
+-  RESTful API backend
+-  SQLite database
 
 ## 🛠️ Tech Stack
 
