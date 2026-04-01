@@ -1,6 +1,6 @@
 # Chemical Equipment Parameter Visualizer
 
-A comprehensive multi-platform application for analyzing and visualizing chemical equipment parameters. Upload CSV data files and get instant statistical analysis, interactive charts, and detailed reports across web, desktop, and API interfaces.
+A comprehensive multi-platform application for analyzing and visualizing chemical equipment parameters. Upload CSV data files and get instant statistical analysis, charts, and detailed reports across web, desktop, and API interfaces.
 
 ## 🚀 Features
 
