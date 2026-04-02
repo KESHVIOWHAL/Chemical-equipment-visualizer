@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_FILE = 'docker-compose.yml'
-    }
-
     stages {
 
         stage('Checkout') {
@@ -15,25 +11,20 @@ pipeline {
 
         stage('Build Images') {
             steps {
-                sh 'docker compose build --no-cache'
+                sh 'docker-compose build'
             }
         }
 
         stage('Run Backend Tests') {
             steps {
-                sh '''
-                    docker compose run --rm backend \
-                        python manage.py test --verbosity=2
-                '''
+                sh 'docker-compose run --rm backend python manage.py test --verbosity=2'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh '''
-                    docker compose down --remove-orphans
-                    docker compose up -d
-                '''
+                sh 'docker-compose down'
+                sh 'docker-compose up -d'
             }
         }
     }
@@ -44,10 +35,10 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed. Check logs above.'
-            sh 'docker compose down --remove-orphans || true'
+            sh 'docker-compose down || true'
         }
         always {
-            sh 'docker compose logs --tail=50 || true'
+            sh 'docker-compose logs --tail=50 || true'
         }
     }
 }
