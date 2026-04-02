@@ -43,3 +43,8 @@ desktop.ini
 *.bak
 *.tmp
 .env
+
+desktop/*.pdf
+node_modules/
+__pycache__/
+.env

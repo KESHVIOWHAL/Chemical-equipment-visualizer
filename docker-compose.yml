@@ -1,14 +1,20 @@
-version: '3'
+version: '3.8'
 
 services:
   backend:
     build: ./backend
+    image: equipment-backend:latest
     ports:
       - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings
+    restart: unless-stopped
 
   web:
     build: ./web
+    image: equipment-web:latest
     ports:
-      - "3001:3000"
+      - "3001:80"
     depends_on:
       - backend
+    restart: unless-stopped
