@@ -23,6 +23,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                sh 'docker stop chemical-equipment-visualizer-backend-1 || true'
+                sh 'docker stop chemical-equipment-visualizer-web-1 || true'
+                sh 'docker rm chemical-equipment-visualizer-backend-1 || true'
+                sh 'docker rm chemical-equipment-visualizer-web-1 || true'
                 sh 'docker-compose down'
                 sh 'docker-compose up -d'
             }
