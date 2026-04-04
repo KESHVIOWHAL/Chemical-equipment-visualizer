@@ -172,3 +172,24 @@ def search_equipment(request):
 
     serializer = EquipmentSerializer(results, many=True)
     return Response({"count": results.count(), "results": serializer.data})
+    @api_view(['GET'])
+def equipment_stats_by_type(request):
+    """
+    Returns min, max, avg grouped by equipment type.
+    Usage: GET /api/stats/
+    """
+    from django.db.models import Avg, Min, Max
+
+    stats = Equipment.objects.values('equipment_type').annotate(
+        avg_flowrate=Avg('flowrate'),
+        min_flowrate=Min('flowrate'),
+        max_flowrate=Max('flowrate'),
+        avg_pressure=Avg('pressure'),
+        min_pressure=Min('pressure'),
+        max_pressure=Max('pressure'),
+        avg_temperature=Avg('temperature'),
+        min_temperature=Min('temperature'),
+        max_temperature=Max('temperature'),
+    )
+
+    return Response(list(stats))
