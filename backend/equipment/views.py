@@ -151,3 +151,24 @@ def generate_pdf_report(request, dataset_id):
         
     except Dataset.DoesNotExist:
         return Response({"error": "Dataset not found"}, status=status.HTTP_404_NOT_FOUND)
+
+# ADD THIS FUNCTION at the bottom of backend/equipment/views.py
+
+@api_view(['GET'])
+def search_equipment(request):
+    """
+    Search equipment by name or type.
+    Usage: GET /api/search/?q=pump
+    """
+    query = request.GET.get('q', '').strip()
+    if not query:
+        return Response({"error": "Query parameter 'q' is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    results = Equipment.objects.filter(
+        equipment_name__icontains=query
+    ) | Equipment.objects.filter(
+        equipment_type__icontains=query
+    )
+
+    serializer = EquipmentSerializer(results, many=True)
+    return Response({"count": results.count(), "results": serializer.data})
