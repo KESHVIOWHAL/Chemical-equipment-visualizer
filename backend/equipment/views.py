@@ -171,9 +171,9 @@ def search_equipment(request):
     )
 
     serializer = EquipmentSerializer(results, many=True)
-    return Response({"count": results.count(), "results": serializer.data})
+    return Response({"count": results.count(), "results": serializer.data}) 
     @api_view(['GET'])
-def equipment_stats_by_type(request):
+    def equipment_stats_by_type(request):
     """
     Returns min, max, avg grouped by equipment type.
     Usage: GET /api/stats/
