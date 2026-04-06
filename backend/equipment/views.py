@@ -151,3 +151,52 @@ def generate_pdf_report(request, dataset_id):
         
     except Dataset.DoesNotExist:
         return Response({"error": "Dataset not found"}, status=status.HTTP_404_NOT_FOUND)
+
+# ADD THIS FUNCTION at the bottom of backend/equipment/views.py
+
+@api_view(['GET'])
+def search_equipment(request):
+    """
+    Search equipment by name or type.
+    Usage: GET /api/search/?q=pump
+    """
+    query = request.GET.get('q', '').strip()
+    if not query:
+        return Response({"error": "Query parameter 'q' is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    results = Equipment.objects.filter(
+        equipment_name__icontains=query
+    ) | Equipment.objects.filter(
+        equipment_type__icontains=query
+    )
+
+    serializer = EquipmentSerializer(results, many=True)
+    return Response({"count": results.count(), "results": serializer.data}) 
+@api_view(['GET'])
+def equipment_stats_by_type(request):
+    from django.db.models import Avg, Min, Max
+    stats = Equipment.objects.values('equipment_type').annotate(
+        avg_flowrate=Avg('flowrate'),
+        min_flowrate=Min('flowrate'),
+        max_flowrate=Max('flowrate'),
+        avg_pressure=Avg('pressure'),
+        min_pressure=Min('pressure'),
+        max_pressure=Max('pressure'),
+        avg_temperature=Avg('temperature'),
+        min_temperature=Min('temperature'),
+        max_temperature=Max('temperature'),
+    )
+    return Response(list(stats))
+@api_view(['DELETE'])
+def delete_dataset(request, dataset_id):
+    """
+    Delete a specific dataset and all its equipment records.
+    Usage: DELETE /api/datasets/<id>/delete/
+    """
+    try:
+        dataset = Dataset.objects.get(id=dataset_id)
+        dataset_name = dataset.name
+        dataset.delete()
+        return Response({"message": f"Dataset '{dataset_name}' deleted successfully"}, status=status.HTTP_200_OK)
+    except Dataset.DoesNotExist:
+        return Response({"error": "Dataset not found"}, status=status.HTTP_404_NOT_FOUND)
