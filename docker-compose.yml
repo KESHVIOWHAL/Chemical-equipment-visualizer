@@ -9,7 +9,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings
     volumes:
-      - db_data:/app/db.sqlite3
+      - db_data:/app/data
     restart: unless-stopped
 
   web:

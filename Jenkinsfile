@@ -30,7 +30,7 @@ pipeline {
                 sh 'docker-compose down'
                 sh 'docker-compose up -d'
                 sh 'sleep 5'
-                sh 'docker-compose run --rm backend python manage.py migrate'
+                sh 'docker exec equipment-app-backend-1 python manage.py migrate'
             }
         }
     }
