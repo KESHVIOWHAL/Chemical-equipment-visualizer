@@ -187,3 +187,16 @@ def equipment_stats_by_type(request):
         max_temperature=Max('temperature'),
     )
     return Response(list(stats))
+@api_view(['DELETE'])
+def delete_dataset(request, dataset_id):
+    """
+    Delete a specific dataset and all its equipment records.
+    Usage: DELETE /api/datasets/<id>/delete/
+    """
+    try:
+        dataset = Dataset.objects.get(id=dataset_id)
+        dataset_name = dataset.name
+        dataset.delete()
+        return Response({"message": f"Dataset '{dataset_name}' deleted successfully"}, status=status.HTTP_200_OK)
+    except Dataset.DoesNotExist:
+        return Response({"error": "Dataset not found"}, status=status.HTTP_404_NOT_FOUND)
