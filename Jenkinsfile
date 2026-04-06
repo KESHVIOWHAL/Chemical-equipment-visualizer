@@ -29,6 +29,8 @@ pipeline {
                 sh 'docker rm chemical-equipment-visualizer-web-1 || true'
                 sh 'docker-compose down'
                 sh 'docker-compose up -d'
+                sh 'sleep 5'
+                sh 'docker-compose run --rm backend python manage.py migrate'
             }
         }
     }
