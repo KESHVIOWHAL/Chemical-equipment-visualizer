@@ -8,6 +8,8 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings
+    volumes:
+      - db_data:/app/db.sqlite3
     restart: unless-stopped
 
   web:
