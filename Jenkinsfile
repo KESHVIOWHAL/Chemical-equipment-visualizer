@@ -20,7 +20,7 @@ pipeline {
                     git branch: 'main', url: 'https://github.com/olika-T/Jenkins-Project.git'
                 }
                 dir('repo4') {
-                    git branch: 'main', url: 'https://github.com/KD231299/pharma-cloudops.gitc'
+                    git branch: 'main', url: 'https://github.com/KD231299/pharma-cloudops.git'
                 }
             }
         }
