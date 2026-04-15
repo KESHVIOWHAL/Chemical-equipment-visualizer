@@ -3,48 +3,76 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Multiple Repos') {
             steps {
-                checkout scm
+                dir('main') {
+                    checkout scm
+                }
+                dir('repo2') {
+                    git 'https://github.com/mrunaliKale31/devops-proj-A'
+                }
+                dir('repo3') {
+                    git 'https://github.com/olika-T/Jenkins-Project.git'
+                }
+                dir('repo4') {
+                    git 'https://github.com/KD231299/pharma-cloudops.git'
+                }
             }
         }
 
-        stage('Build Images') {
+        stage('Build Docker Images') {
             steps {
-                sh 'docker-compose build'
+                dir('main') {
+                    sh 'docker-compose build'
+                }
+            }
+        }
+
+        stage('Start Services') {
+            steps {
+                dir('main') {
+                    sh 'docker-compose up -d'
+                }
             }
         }
 
         stage('Run Backend Tests') {
             steps {
-                sh 'docker-compose run --rm backend python manage.py test --verbosity=2'
+                dir('main') {
+                    sh 'docker-compose exec backend python manage.py test --verbosity=2'
+                }
             }
         }
 
-        stage('Deploy') {
+        stage('Database Migration') {
             steps {
-                sh 'docker stop chemical-equipment-visualizer-backend-1 || true'
-                sh 'docker stop chemical-equipment-visualizer-web-1 || true'
-                sh 'docker rm chemical-equipment-visualizer-backend-1 || true'
-                sh 'docker rm chemical-equipment-visualizer-web-1 || true'
-                sh 'docker-compose down'
-                sh 'docker-compose up -d'
-                sh 'sleep 5'
-                sh 'docker exec equipment-app-backend-1 python manage.py migrate'
+                dir('main') {
+                    sh 'docker-compose exec backend python manage.py migrate'
+                }
+            }
+        }
+
+        stage('Deploy Confirmation') {
+            steps {
+                echo 'Deployment successful 🚀'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully. Services are up.'
+            echo 'Pipeline completed successfully ✅'
         }
         failure {
-            echo 'Pipeline failed. Check logs above.'
-            sh 'docker-compose down || true'
+            echo 'Pipeline failed ❌'
+            dir('main') {
+                sh 'docker-compose down || true'
+            }
         }
         always {
-            sh 'docker-compose logs --tail=50 || true'
+            dir('main') {
+                sh 'docker-compose logs --tail=50 || true'
+            }
         }
     }
 }
