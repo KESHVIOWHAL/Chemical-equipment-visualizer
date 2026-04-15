@@ -16,7 +16,7 @@ services:
     build: ./web
     image: equipment-web:latest
     ports:
-      - "3001:80"
+      - "3006:80"
     depends_on:
       - backend
     restart: unless-stopped
