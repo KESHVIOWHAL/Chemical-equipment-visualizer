@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-6-@f9p-4r+dorc$3c2vvu95b&m3@&$#t=a3-ty6p-t8fma35hc
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'corsheaders', 
@@ -23,9 +23,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'equipment',
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -34,6 +36,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'

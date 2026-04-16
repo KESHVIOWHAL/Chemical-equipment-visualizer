@@ -5,10 +5,10 @@ pipeline {
 
         stage('Checkout Multiple Repos') {
             steps {
-                dir('main') {
-                    checkout scm
-                }
+                // Main repo
+                checkout scm
 
+                // Other repos
                 dir('repo2') {
                     git branch: 'main', url: 'https://github.com/mrunaliKale31/devops-proj-A'
                 }
@@ -25,33 +25,25 @@ pipeline {
 
         stage('Build Docker Images') {
             steps {
-                dir('main') {
-                    sh 'docker-compose build'
-                }
+                sh 'docker-compose build'
             }
         }
 
         stage('Start Services') {
             steps {
-                dir('main') {
-                    sh 'docker-compose up -d'
-                }
+                sh 'docker-compose up -d'
             }
         }
 
         stage('Run Backend Tests') {
             steps {
-                dir('main') {
-                    sh 'docker-compose exec backend python manage.py test --verbosity=2'
-                }
+                sh 'docker-compose exec backend python manage.py test --verbosity=2'
             }
         }
 
         stage('Database Migration') {
             steps {
-                dir('main') {
-                    sh 'docker-compose exec backend python manage.py migrate'
-                }
+                sh 'docker-compose exec backend python manage.py migrate'
             }
         }
 
@@ -69,15 +61,11 @@ pipeline {
 
         failure {
             echo 'Pipeline failed ❌'
-            dir('main') {
-                sh 'docker-compose down || true'
-            }
+            sh 'docker-compose down || true'
         }
 
         always {
-            dir('main') {
-                sh 'docker-compose logs --tail=50 || true'
-            }
+            sh 'docker-compose logs --tail=50 || true'
         }
     }
 }

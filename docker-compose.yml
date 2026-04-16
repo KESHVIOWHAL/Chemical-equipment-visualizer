@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   backend:
     build: ./backend
     image: equipment-backend:latest
     ports:
-      - "8001:8000"
+      - "8090:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings
     volumes:
@@ -16,9 +14,49 @@ services:
     build: ./web
     image: equipment-web:latest
     ports:
-      - "3006:80"
+      - "3090:80"
     depends_on:
       - backend
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3007:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  # ✅ FIXED PATHS (NO ../)
+  repo2-app:
+    build: ./repo2
+    container_name: repo2-app
+    ports:
+      - "3011:3000"
+    restart: unless-stopped
+
+  repo3-app:
+    build: ./repo3
+    container_name: repo3-app
+    ports:
+      - "3012:3000"
+    restart: unless-stopped
+
+  repo4-app:
+    build: ./repo4
+    container_name: repo4-app
+    ports:
+      - "3013:3000"
     restart: unless-stopped
 
 volumes:
