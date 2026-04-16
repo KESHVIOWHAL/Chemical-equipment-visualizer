@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   backend:
@@ -24,7 +22,6 @@ services:
 
   prometheus:
     image: prom/prometheus
-    container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -33,27 +30,32 @@ services:
 
   grafana:
     image: grafana/grafana
-    container_name: grafana
     ports:
       - "3007:3000"
     depends_on:
       - prometheus
     restart: unless-stopped
 
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
   # ========================
-  # REPO2 (has backend + frontend)
+  # REPO2
   # ========================
 
   repo2-backend:
     build: ./repo2/backend
-    container_name: repo2-backend
     ports:
       - "8011:8000"
     restart: unless-stopped
 
   repo2-frontend:
     build: ./repo2/frontend
-    container_name: repo2-frontend
     ports:
       - "3011:3000"
     depends_on:
@@ -61,19 +63,21 @@ services:
     restart: unless-stopped
 
   # ========================
-  # REPO3 (has backend + frontend)
+  # REPO3
   # ========================
 
   repo3-backend:
     build: ./repo3/backend
-    container_name: repo3-backend
     ports:
       - "8012:8000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/testdb
+    depends_on:
+      - mongo
     restart: unless-stopped
 
   repo3-frontend:
     build: ./repo3/frontend
-    container_name: repo3-frontend
     ports:
       - "3012:3000"
     depends_on:
@@ -81,15 +85,15 @@ services:
     restart: unless-stopped
 
   # ========================
-  # REPO4 (single Dockerfile)
+  # REPO4
   # ========================
 
   repo4-app:
     build: ./repo4
-    container_name: repo4-app
     ports:
       - "3013:3000"
     restart: unless-stopped
 
 volumes:
   db_data:
+  mongo_data:

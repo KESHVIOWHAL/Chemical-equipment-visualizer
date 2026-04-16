@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        COMPOSE_PROJECT_NAME = "devops_${BUILD_NUMBER}"
+    }
+
     stages {
 
         stage('Checkout Multiple Repos') {
@@ -21,33 +25,42 @@ pipeline {
             }
         }
 
+        stage('Cleanup Old Containers') {
+            steps {
+                sh '''
+                docker-compose down -v --remove-orphans || true
+                docker system prune -f || true
+                '''
+            }
+        }
+
         stage('Build Docker Images') {
             steps {
-                sh 'docker-compose build --no-cache'
+                sh 'docker-compose -p $COMPOSE_PROJECT_NAME build --no-cache'
             }
         }
 
         stage('Start Services') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'docker-compose -p $COMPOSE_PROJECT_NAME up -d'
             }
         }
 
         stage('Wait for Services') {
             steps {
-                sh 'sleep 15'
+                sh 'sleep 20'
             }
         }
 
         stage('Run Backend Tests') {
             steps {
-                sh 'docker-compose exec backend python manage.py test --verbosity=2'
+                sh 'docker-compose -p $COMPOSE_PROJECT_NAME exec -T backend python manage.py test --verbosity=2'
             }
         }
 
         stage('Database Migration') {
             steps {
-                sh 'docker-compose exec backend python manage.py migrate'
+                sh 'docker-compose -p $COMPOSE_PROJECT_NAME exec -T backend python manage.py migrate'
             }
         }
 
@@ -59,17 +72,20 @@ pipeline {
     }
 
     post {
+
         success {
             echo 'Pipeline completed successfully ✅'
         }
 
         failure {
             echo 'Pipeline failed ❌'
-            sh 'docker-compose down || true'
         }
 
         always {
-            sh 'docker-compose logs --tail=50 || true'
+            sh '''
+            docker-compose -p $COMPOSE_PROJECT_NAME logs --tail=50 || true
+            docker-compose -p $COMPOSE_PROJECT_NAME down -v --remove-orphans || true
+            '''
         }
     }
 }
