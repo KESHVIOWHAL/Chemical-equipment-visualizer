@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   backend:
     build: ./backend
     image: equipment-backend:latest
@@ -39,46 +40,55 @@ services:
       - prometheus
     restart: unless-stopped
 
-  # Repo2
+  # ========================
+  # REPO2 (has backend + frontend)
+  # ========================
+
   repo2-backend:
     build: ./repo2/backend
     container_name: repo2-backend
     ports:
-      - "3011:8000"
+      - "8011:8000"
     restart: unless-stopped
 
   repo2-frontend:
     build: ./repo2/frontend
     container_name: repo2-frontend
     ports:
-      - "3012:3000"
+      - "3011:3000"
     depends_on:
       - repo2-backend
     restart: unless-stopped
 
-  # Repo3 FIX (two services)
-   repo3-backend:
+  # ========================
+  # REPO3 (has backend + frontend)
+  # ========================
+
+  repo3-backend:
     build: ./repo3/backend
     container_name: repo3-backend
     ports:
-      - "3013:8000"
+      - "8012:8000"
     restart: unless-stopped
 
   repo3-frontend:
     build: ./repo3/frontend
     container_name: repo3-frontend
     ports:
-      - "3014:3000"
+      - "3012:3000"
     depends_on:
       - repo3-backend
     restart: unless-stopped
 
-  # Repo4
+  # ========================
+  # REPO4 (single Dockerfile)
+  # ========================
+
   repo4-app:
     build: ./repo4
     container_name: repo4-app
     ports:
-      - "3015:3000"
+      - "3013:3000"
     restart: unless-stopped
 
 volumes:
