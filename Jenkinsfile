@@ -5,20 +5,18 @@ pipeline {
 
         stage('Checkout Multiple Repos') {
             steps {
-                // Main repo (this Jenkinsfile repo)
                 dir('main') {
                     checkout scm
                 }
 
-                // Repo 2
                 dir('repo2') {
                     git branch: 'main', url: 'https://github.com/mrunaliKale31/devops-proj-A'
                 }
 
-                // Repo 3
                 dir('repo3') {
                     git branch: 'main', url: 'https://github.com/olika-T/Jenkins-Project.git'
                 }
+
                 dir('repo4') {
                     git branch: 'main', url: 'https://github.com/KD231299/pharma-cloudops.git'
                 }
@@ -28,7 +26,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 dir('main') {
-                    sh 'docker compose build'
+                    sh 'docker-compose build'
                 }
             }
         }
@@ -36,7 +34,7 @@ pipeline {
         stage('Start Services') {
             steps {
                 dir('main') {
-                    sh 'docker compose up -d'
+                    sh 'docker-compose up -d'
                 }
             }
         }
@@ -44,7 +42,7 @@ pipeline {
         stage('Run Backend Tests') {
             steps {
                 dir('main') {
-                    sh 'docker compose exec backend python manage.py test --verbosity=2'
+                    sh 'docker-compose exec backend python manage.py test --verbosity=2'
                 }
             }
         }
@@ -52,7 +50,7 @@ pipeline {
         stage('Database Migration') {
             steps {
                 dir('main') {
-                    sh 'docker compose exec backend python manage.py migrate'
+                    sh 'docker-compose exec backend python manage.py migrate'
                 }
             }
         }
@@ -72,13 +70,13 @@ pipeline {
         failure {
             echo 'Pipeline failed ❌'
             dir('main') {
-                sh 'docker compose down || true'
+                sh 'docker-compose down || true'
             }
         }
 
         always {
             dir('main') {
-                sh 'docker compose logs --tail=50 || true'
+                sh 'docker-compose logs --tail=50 || true'
             }
         }
     }
