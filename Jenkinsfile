@@ -5,10 +5,8 @@ pipeline {
 
         stage('Checkout Multiple Repos') {
             steps {
-                // Main repo
                 checkout scm
 
-                // Other repos
                 dir('repo2') {
                     git branch: 'main', url: 'https://github.com/mrunaliKale31/devops-proj-A'
                 }
@@ -25,13 +23,19 @@ pipeline {
 
         stage('Build Docker Images') {
             steps {
-                sh 'docker-compose build'
+                sh 'docker-compose build --no-cache'
             }
         }
 
         stage('Start Services') {
             steps {
                 sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Wait for Services') {
+            steps {
+                sh 'sleep 15'
             }
         }
 

@@ -45,12 +45,21 @@ services:
       - "3011:3000"
     restart: unless-stopped
 
-  repo3-app:
-    build: ./repo3
-    container_name: repo3-app
-    ports:
-      - "3012:3000"
-    restart: unless-stopped
+repo3-backend:
+  build: ./repo3/backend
+  container_name: repo3-backend
+  ports:
+    - "8012:8000"
+  restart: unless-stopped
+
+repo3-frontend:
+  build: ./repo3/frontend
+  container_name: repo3-frontend
+  ports:
+    - "3012:3000"
+  depends_on:
+    - repo3-backend
+  restart: unless-stopped
 
   repo4-app:
     build: ./repo4
