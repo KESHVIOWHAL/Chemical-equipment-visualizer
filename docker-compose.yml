@@ -1,0 +1,22 @@
+services:
+
+  backend:
+    build: ./backend
+    image: equipment-backend:latest
+    ports:
+      - "2000:8000"
+    volumes:
+      - db_data:/app/data
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    image: equipment-web:latest
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db_data:
